@@ -355,7 +355,12 @@ void lcd_img(char *fname, uint16_t x, uint16_t y) {
 		printf("File Size: %u\nOffset: %u\nWidth: %u\nHeight: %u\nBPP: %u\n\n",isize,ioffset,iwidth,iheight,ibpp);
 
 		lcd_setframe(x,y,iwidth,iheight); //set the active frame...
-		rowbytes=(iwidth*3) + 4-((iwidth*3)%4);
+
+		// Wrong calculationg bytes in row for bitmap. #1
+		rowbytes = (iwidth*3);
+		uint8_t d = (iwidth*3)%4;
+		if (d>0) { rowbytes += 4-d; }
+
 		for (p=iheight-1;p>0;p--) {
 			// p = relative page address (y)
 			fpos = ioffset+(p*rowbytes);
